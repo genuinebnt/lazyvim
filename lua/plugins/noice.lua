@@ -1,6 +1,7 @@
 return {
   {
     "folke/noice.nvim",
+    event = "VeryLazy",
     opts = {
       -- Add error handling for treesitter integration
       lsp = {
@@ -89,11 +90,16 @@ return {
       },
     },
     config = function(_, opts)
-      require("noice").setup(opts)
+      local ok, noice = pcall(require, "noice")
+      if not ok then
+        return
+      end
+      
+      noice.setup(opts)
       
       -- Add error handling for treesitter query integration
-      local ok, query = pcall(require, "nvim-treesitter.query")
-      if ok and query.get_query then
+      local query_ok, query = pcall(require, "nvim-treesitter.query")
+      if query_ok and query.get_query then
         -- Wrap query functions with error handling
         local original_get_query = query.get_query
         query.get_query = function(lang, query_name)

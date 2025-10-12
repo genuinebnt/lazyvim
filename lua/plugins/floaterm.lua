@@ -34,15 +34,7 @@ return {
         desc = "Previous terminal tab",
         mode = "t", -- terminal mode only
       },
-      -- Hide floating terminal
-      {
-        "q",
-        function()
-          vim.cmd("FloatermHide")
-        end,
-        desc = "Hide floating terminal",
-        mode = "t", -- terminal mode
-      },
+      -- Hide floating terminal (removed q keybinding, only Esc available)
       -- Exit/kill floating terminal
       {
         "<S-q>",
@@ -52,13 +44,13 @@ return {
         desc = "Exit floating terminal",
         mode = "t", -- terminal mode
       },
-      -- Escape from terminal to normal mode
+      -- Escape from terminal (hide terminal)
       {
         "<Esc>",
         function()
-          vim.cmd("stopinsert")
+          vim.cmd("FloatermHide")
         end,
-        desc = "Exit terminal insert mode",
+        desc = "Hide floating terminal",
         mode = "t",
       },
       -- Create new terminal tab

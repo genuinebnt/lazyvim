@@ -2,10 +2,15 @@
 -- Default keymaps that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/keymaps.lua
 -- Add any additional keymaps here
 
--- Quick escape from insert mode
--- Map jk and kj to escape insert mode when pressed quickly
-vim.keymap.set("i", "jk", "<Esc>", { desc = "Escape insert mode with jk" })
-vim.keymap.set("i", "kj", "<Esc>", { desc = "Escape insert mode with kj" })
+-- Custom keymap categories:
+-- 1. Panel navigation (Shift+HJKL)
+-- 2. Window resizing (Arrow keys + Ctrl+Arrow)
+-- 3. Windsurf AI completion
+-- 4. Buffer navigation (Tab/Shift+Tab)
+-- 5. Format and save (Shift+S)
+
+-- Quick escape from insert mode is now handled by better-escape.nvim
+-- Supports jk, kj, and jj mappings with better timing and behavior
 
 -- Tab functionality is now handled by blink.cmp configuration
 -- See lua/plugins/blink-cmp.lua for completion mappings
@@ -24,27 +29,22 @@ vim.keymap.set("n", "<S-Tab>", ":bprev<CR>", { desc = "Previous buffer" })
 vim.keymap.set("n", "<S-s>", function()
   vim.lsp.buf.format()
   vim.cmd("write")
-  print("Formatted and saved")
 end, { desc = "Format and save file" })
 
 -- Panel navigation with Shift+HLJK
 -- Move between explorer and editor panels (terminal is now floating)
 vim.keymap.set("n", "<S-h>", function()
   vim.cmd("wincmd h")
-  print("Shift+H: Moved left")
-end, { desc = "Move to left panel (explorer)", noremap = true })
+end, { desc = "Panel: Move left (explorer)", noremap = true })
 vim.keymap.set("n", "<S-l>", function()
   vim.cmd("wincmd l")
-  print("Shift+L: Moved right")
-end, { desc = "Move to right panel (editor)", noremap = true })
+end, { desc = "Panel: Move right (editor)", noremap = true })
 vim.keymap.set("n", "<S-j>", function()
   vim.cmd("wincmd j")
-  print("Shift+J: Moved down")
-end, { desc = "Move to panel below", noremap = true })
+end, { desc = "Panel: Move down", noremap = true })
 vim.keymap.set("n", "<S-k>", function()
   vim.cmd("wincmd k")
-  print("Shift+K: Moved up")
-end, { desc = "Move to panel above", noremap = true })
+end, { desc = "Panel: Move up", noremap = true })
 
 -- Legacy arrow key navigation (kept for compatibility)
 vim.keymap.set("n", "<S-Left>", "<C-w>h", { desc = "Move to left panel (explorer)" })
@@ -103,18 +103,16 @@ vim.keymap.set("n", "<Up>", function()
   local buftype = vim.api.nvim_buf_get_option(vim.api.nvim_win_get_buf(current_win), 'buftype')
   if buftype == "" then
     vim.cmd("wincmd +")
-    print("Increased window height")
   else
     print("Cannot resize this buffer type:", buftype)
   end
-end, { desc = "Increase window height", noremap = true, silent = false })
+end, { desc = "Resize: Increase height", noremap = true, silent = false })
 
 vim.keymap.set("n", "<Down>", function()
   local current_win = vim.api.nvim_get_current_win()
   local buftype = vim.api.nvim_buf_get_option(vim.api.nvim_win_get_buf(current_win), 'buftype')
   if buftype == "" then
     vim.cmd("wincmd -")
-    print("Decreased window height")
   else
     print("Cannot resize this buffer type:", buftype)
   end
@@ -125,7 +123,6 @@ vim.keymap.set("n", "<Left>", function()
   local buftype = vim.api.nvim_buf_get_option(vim.api.nvim_win_get_buf(current_win), 'buftype')
   if buftype == "" then
     vim.cmd("wincmd <")
-    print("Decreased window width")
   else
     print("Cannot resize this buffer type:", buftype)
   end
@@ -136,7 +133,6 @@ vim.keymap.set("n", "<Right>", function()
   local buftype = vim.api.nvim_buf_get_option(vim.api.nvim_win_get_buf(current_win), 'buftype')
   if buftype == "" then
     vim.cmd("wincmd >")
-    print("Increased window width")
   else
     print("Cannot resize this buffer type:", buftype)
   end
@@ -148,7 +144,6 @@ vim.keymap.set("n", "<C-Up>", function()
   local buftype = vim.api.nvim_buf_get_option(vim.api.nvim_win_get_buf(current_win), 'buftype')
   if buftype == "" then
     vim.cmd("5wincmd +")
-    print("Increased window height by 5 lines")
   else
     print("Cannot resize this buffer type:", buftype)
   end
@@ -159,7 +154,6 @@ vim.keymap.set("n", "<C-Down>", function()
   local buftype = vim.api.nvim_buf_get_option(vim.api.nvim_win_get_buf(current_win), 'buftype')
   if buftype == "" then
     vim.cmd("5wincmd -")
-    print("Decreased window height by 5 lines")
   else
     print("Cannot resize this buffer type:", buftype)
   end
@@ -170,7 +164,6 @@ vim.keymap.set("n", "<C-Left>", function()
   local buftype = vim.api.nvim_buf_get_option(vim.api.nvim_win_get_buf(current_win), 'buftype')
   if buftype == "" then
     vim.cmd("5wincmd <")
-    print("Decreased window width by 5 columns")
   else
     print("Cannot resize this buffer type:", buftype)
   end
@@ -181,7 +174,6 @@ vim.keymap.set("n", "<C-Right>", function()
   local buftype = vim.api.nvim_buf_get_option(vim.api.nvim_win_get_buf(current_win), 'buftype')
   if buftype == "" then
     vim.cmd("5wincmd >")
-    print("Increased window width by 5 columns")
   else
     print("Cannot resize this buffer type:", buftype)
   end
@@ -190,7 +182,6 @@ end, { desc = "Increase window width by 5 columns", noremap = true, silent = fal
 -- Debug function to check window and buffer information
 vim.keymap.set("n", "<leader>wd", function()
   local wins = vim.api.nvim_list_wins()
-  print("=== Window Debug Info ===")
   for i, win in ipairs(wins) do
     local buf = vim.api.nvim_win_get_buf(win)
     local buftype = vim.api.nvim_buf_get_option(buf, 'buftype')
@@ -199,3 +190,67 @@ vim.keymap.set("n", "<leader>wd", function()
     print(string.format("Window %d: buftype='%s', filetype='%s', name='%s'", i, buftype, filetype, name))
   end
 end, { desc = "Debug window information", noremap = true })
+
+-- Devicons utility functions
+vim.keymap.set("n", "<leader>di", function()
+  local ok, devicons = pcall(require, "nvim-web-devicons")
+  if ok then
+    local filetype = vim.bo.filetype
+    local filename = vim.fn.expand("%:t")
+    local icon, color = devicons.get_icon(filename, filetype)
+    if icon then
+      print(string.format("File: %s | Icon: %s | Color: %s | Type: %s", filename, icon, color, filetype))
+    else
+      print(string.format("File: %s | No icon found | Type: %s", filename, filetype))
+    end
+  else
+    print("Devicons not available")
+  end
+end, { desc = "Show file icon info", noremap = true })
+
+-- Undotree keybindings
+vim.keymap.set("n", "<leader>u", function()
+  vim.cmd("UndotreeToggle")
+end, { desc = "Undo: Toggle undotree", noremap = true })
+
+vim.keymap.set("n", "<leader>U", function()
+  vim.cmd("UndotreeFocus")
+end, { desc = "Undo: Focus undotree", noremap = true })
+
+-- Additional undo/redo keybindings for better workflow
+vim.keymap.set("n", "<C-r>", function()
+  vim.cmd("redo")
+end, { desc = "Redo last change", noremap = true })
+
+vim.keymap.set("n", "<leader>ur", function()
+  vim.cmd("UndotreeRefresh")
+end, { desc = "Undo: Refresh undotree", noremap = true })
+
+-- Snacks explorer keybindings
+vim.keymap.set("n", "<leader>e", function()
+  vim.cmd("SnacksExplorer")
+end, { desc = "Explorer: Open snacks explorer", noremap = true })
+
+vim.keymap.set("n", "<leader>E", function()
+  vim.cmd("SnacksPicker")
+end, { desc = "Explorer: Open snacks picker", noremap = true })
+
+-- Test snacks icons
+vim.keymap.set("n", "<leader>et", function()
+  local ok, snacks = pcall(require, "snacks")
+  if ok then
+    print("Snacks loaded successfully")
+    local devicons_ok, devicons = pcall(require, "nvim-web-devicons")
+    if devicons_ok then
+      print("Devicons loaded successfully")
+      local filename = vim.fn.expand("%:t")
+      local filetype = vim.bo.filetype
+      local icon, color = devicons.get_icon(filename, filetype)
+      print(string.format("File: %s | Icon: %s | Color: %s", filename, icon or "none", color or "none"))
+    else
+      print("Devicons not loaded")
+    end
+  else
+    print("Snacks not loaded")
+  end
+end, { desc = "Test: Check snacks and devicons", noremap = true })
