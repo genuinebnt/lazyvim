@@ -90,3 +90,21 @@ vim.keymap.set("t", "<S-Up>", "<C-\\><C-n><C-w>k", { desc = "Move from terminal 
 vim.keymap.set("t", "<S-Left>", "<C-\\><C-n><C-w>h", { desc = "Move from terminal to left panel" })
 vim.keymap.set("t", "<S-Right>", "<C-\\><C-n><C-w>l", { desc = "Move from terminal to right panel" })
 vim.keymap.set("t", "<Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
+
+-- Windsurf AI code completion keybindings (integrated with blink.cmp)
+vim.keymap.set("i", "<C-g>", function() return vim.fn["codeium#Accept"]() end, { expr = true, silent = true, desc = "Accept Windsurf suggestion" })
+vim.keymap.set("i", "<C-;>", function() return vim.fn["codeium#CycleCompletions"](1) end, { expr = true, silent = true, desc = "Cycle Windsurf suggestions forward" })
+vim.keymap.set("i", "<C-,>", function() return vim.fn["codeium#CycleCompletions"](-1) end, { expr = true, silent = true, desc = "Cycle Windsurf suggestions backward" })
+vim.keymap.set("i", "<C-x>", function() return vim.fn["codeium#Clear"]() end, { expr = true, silent = true, desc = "Clear Windsurf suggestions" })
+
+-- Window resizing with arrow keys
+vim.keymap.set("n", "<Up>", "<C-w>+", { desc = "Increase window height" })
+vim.keymap.set("n", "<Down>", "<C-w>-", { desc = "Decrease window height" })
+vim.keymap.set("n", "<Left>", "<C-w><", { desc = "Decrease window width" })
+vim.keymap.set("n", "<Right>", "<C-w>>", { desc = "Increase window width" })
+
+-- Alternative window resizing with Ctrl+Arrow keys (for more precise control)
+vim.keymap.set("n", "<C-Up>", "5<C-w>+", { desc = "Increase window height by 5 lines" })
+vim.keymap.set("n", "<C-Down>", "5<C-w>-", { desc = "Decrease window height by 5 lines" })
+vim.keymap.set("n", "<C-Left>", "5<C-w><", { desc = "Decrease window width by 5 columns" })
+vim.keymap.set("n", "<C-Right>", "5<C-w>>", { desc = "Increase window width by 5 columns" })

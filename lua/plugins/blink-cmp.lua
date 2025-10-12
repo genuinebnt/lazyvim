@@ -2,6 +2,10 @@ return {
   -- Configure blink.cmp with Tab to accept, arrows for navigation
   {
     "saghen/blink.cmp",
+    dependencies = {
+      "rafamadriz/friendly-snippets",
+      "Exafunction/windsurf.nvim",
+    },
     opts = {
       keymap = {
         preset = "default",
@@ -20,6 +24,25 @@ return {
         ["<C-e>"] = { "cancel", "fallback" },
         ["<Esc>"] = { "cancel", "fallback" },
       },
+      
+      appearance = {
+        nerd_font_variant = "mono",
+      },
+
+      -- Only show the documentation popup when manually triggered
+      completion = { documentation = { auto_show = false } },
+
+      -- Sources including Windsurf (Codeium)
+      sources = {
+        default = { "lsp", "path", "snippets", "buffer", "codeium" },
+        providers = {
+          codeium = { name = "Codeium", module = "codeium.blink", async = true },
+        },
+      },
+      
+      -- Rust fuzzy matcher for better performance
+      fuzzy = { implementation = "prefer_rust_with_warning" }
     },
+    opts_extend = { "sources.default" }
   },
 }
