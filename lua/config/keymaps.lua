@@ -28,7 +28,7 @@ vim.keymap.set("n", "<S-s>", function()
 end, { desc = "Format and save file" })
 
 -- Panel navigation with Shift+HLJK
--- Move between explorer, editor, and terminal panels
+-- Move between explorer and editor panels (terminal is now floating)
 vim.keymap.set("n", "<S-h>", function()
   vim.cmd("wincmd h")
   print("Shift+H: Moved left")
@@ -40,11 +40,11 @@ end, { desc = "Move to right panel (editor)", noremap = true })
 vim.keymap.set("n", "<S-j>", function()
   vim.cmd("wincmd j")
   print("Shift+J: Moved down")
-end, { desc = "Move to panel below (terminal)", noremap = true })
+end, { desc = "Move to panel below", noremap = true })
 vim.keymap.set("n", "<S-k>", function()
   vim.cmd("wincmd k")
   print("Shift+K: Moved up")
-end, { desc = "Move to panel above (editor)", noremap = true })
+end, { desc = "Move to panel above", noremap = true })
 
 -- Legacy arrow key navigation (kept for compatibility)
 vim.keymap.set("n", "<S-Left>", "<C-w>h", { desc = "Move to left panel (explorer)" })
@@ -83,31 +83,7 @@ vim.keymap.set("n", "<leader>e", function()
   end
 end, { desc = "Toggle focus between explorer and editor" })
 
--- Smart terminal navigation
-vim.keymap.set("n", "<leader>t", function()
-  -- Find or create terminal window
-  local current_win = vim.api.nvim_get_current_win()
-  local wins = vim.api.nvim_list_wins()
-
-  -- Find existing terminal window
-  for _, win in ipairs(wins) do
-    local buf = vim.api.nvim_win_get_buf(win)
-    local bt = vim.api.nvim_buf_get_option(buf, 'buftype')
-    if bt == 'terminal' then
-      if current_win == win then
-        -- We're in terminal, go back to editor
-        vim.cmd('wincmd k')
-      else
-        -- Go to terminal
-        vim.api.nvim_set_current_win(win)
-      end
-      return
-    end
-  end
-
-  -- No terminal found, open one
-  vim.cmd('split | terminal')
-end, { desc = "Toggle focus to/from terminal" })
+-- Terminal navigation is now handled by floaterm plugin
 
 -- Terminal mode mappings
 vim.keymap.set("t", "<S-Up>", "<C-\\><C-n><C-w>k", { desc = "Move from terminal to panel above" })
