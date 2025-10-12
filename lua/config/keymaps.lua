@@ -98,13 +98,104 @@ vim.keymap.set("i", "<C-,>", function() return vim.fn["codeium#CycleCompletions"
 vim.keymap.set("i", "<C-x>", function() return vim.fn["codeium#Clear"]() end, { expr = true, silent = true, desc = "Clear Windsurf suggestions" })
 
 -- Window resizing with arrow keys
-vim.keymap.set("n", "<Up>", "<C-w>+", { desc = "Increase window height" })
-vim.keymap.set("n", "<Down>", "<C-w>-", { desc = "Decrease window height" })
-vim.keymap.set("n", "<Left>", "<C-w><", { desc = "Decrease window width" })
-vim.keymap.set("n", "<Right>", "<C-w>>", { desc = "Increase window width" })
+vim.keymap.set("n", "<Up>", function()
+  local current_win = vim.api.nvim_get_current_win()
+  local buftype = vim.api.nvim_buf_get_option(vim.api.nvim_win_get_buf(current_win), 'buftype')
+  if buftype == "" then
+    vim.cmd("wincmd +")
+    print("Increased window height")
+  else
+    print("Cannot resize this buffer type:", buftype)
+  end
+end, { desc = "Increase window height", noremap = true, silent = false })
+
+vim.keymap.set("n", "<Down>", function()
+  local current_win = vim.api.nvim_get_current_win()
+  local buftype = vim.api.nvim_buf_get_option(vim.api.nvim_win_get_buf(current_win), 'buftype')
+  if buftype == "" then
+    vim.cmd("wincmd -")
+    print("Decreased window height")
+  else
+    print("Cannot resize this buffer type:", buftype)
+  end
+end, { desc = "Decrease window height", noremap = true, silent = false })
+
+vim.keymap.set("n", "<Left>", function()
+  local current_win = vim.api.nvim_get_current_win()
+  local buftype = vim.api.nvim_buf_get_option(vim.api.nvim_win_get_buf(current_win), 'buftype')
+  if buftype == "" then
+    vim.cmd("wincmd <")
+    print("Decreased window width")
+  else
+    print("Cannot resize this buffer type:", buftype)
+  end
+end, { desc = "Decrease window width", noremap = true, silent = false })
+
+vim.keymap.set("n", "<Right>", function()
+  local current_win = vim.api.nvim_get_current_win()
+  local buftype = vim.api.nvim_buf_get_option(vim.api.nvim_win_get_buf(current_win), 'buftype')
+  if buftype == "" then
+    vim.cmd("wincmd >")
+    print("Increased window width")
+  else
+    print("Cannot resize this buffer type:", buftype)
+  end
+end, { desc = "Increase window width", noremap = true, silent = false })
 
 -- Alternative window resizing with Ctrl+Arrow keys (for more precise control)
-vim.keymap.set("n", "<C-Up>", "5<C-w>+", { desc = "Increase window height by 5 lines" })
-vim.keymap.set("n", "<C-Down>", "5<C-w>-", { desc = "Decrease window height by 5 lines" })
-vim.keymap.set("n", "<C-Left>", "5<C-w><", { desc = "Decrease window width by 5 columns" })
-vim.keymap.set("n", "<C-Right>", "5<C-w>>", { desc = "Increase window width by 5 columns" })
+vim.keymap.set("n", "<C-Up>", function()
+  local current_win = vim.api.nvim_get_current_win()
+  local buftype = vim.api.nvim_buf_get_option(vim.api.nvim_win_get_buf(current_win), 'buftype')
+  if buftype == "" then
+    vim.cmd("5wincmd +")
+    print("Increased window height by 5 lines")
+  else
+    print("Cannot resize this buffer type:", buftype)
+  end
+end, { desc = "Increase window height by 5 lines", noremap = true, silent = false })
+
+vim.keymap.set("n", "<C-Down>", function()
+  local current_win = vim.api.nvim_get_current_win()
+  local buftype = vim.api.nvim_buf_get_option(vim.api.nvim_win_get_buf(current_win), 'buftype')
+  if buftype == "" then
+    vim.cmd("5wincmd -")
+    print("Decreased window height by 5 lines")
+  else
+    print("Cannot resize this buffer type:", buftype)
+  end
+end, { desc = "Decrease window height by 5 lines", noremap = true, silent = false })
+
+vim.keymap.set("n", "<C-Left>", function()
+  local current_win = vim.api.nvim_get_current_win()
+  local buftype = vim.api.nvim_buf_get_option(vim.api.nvim_win_get_buf(current_win), 'buftype')
+  if buftype == "" then
+    vim.cmd("5wincmd <")
+    print("Decreased window width by 5 columns")
+  else
+    print("Cannot resize this buffer type:", buftype)
+  end
+end, { desc = "Decrease window width by 5 columns", noremap = true, silent = false })
+
+vim.keymap.set("n", "<C-Right>", function()
+  local current_win = vim.api.nvim_get_current_win()
+  local buftype = vim.api.nvim_buf_get_option(vim.api.nvim_win_get_buf(current_win), 'buftype')
+  if buftype == "" then
+    vim.cmd("5wincmd >")
+    print("Increased window width by 5 columns")
+  else
+    print("Cannot resize this buffer type:", buftype)
+  end
+end, { desc = "Increase window width by 5 columns", noremap = true, silent = false })
+
+-- Debug function to check window and buffer information
+vim.keymap.set("n", "<leader>wd", function()
+  local wins = vim.api.nvim_list_wins()
+  print("=== Window Debug Info ===")
+  for i, win in ipairs(wins) do
+    local buf = vim.api.nvim_win_get_buf(win)
+    local buftype = vim.api.nvim_buf_get_option(buf, 'buftype')
+    local filetype = vim.api.nvim_buf_get_option(buf, 'filetype')
+    local name = vim.api.nvim_buf_get_name(buf)
+    print(string.format("Window %d: buftype='%s', filetype='%s', name='%s'", i, buftype, filetype, name))
+  end
+end, { desc = "Debug window information", noremap = true })
