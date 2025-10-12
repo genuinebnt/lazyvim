@@ -5,7 +5,7 @@ return {
     opts = {
       keymap = {
         preset = "default",
-        -- Tab accepts the current selection
+        -- Tab accepts the current selection (normal mode Tab is for buffers)
         ["<Tab>"] = { "accept", "fallback" },
         ["<S-Tab>"] = { "accept", "fallback" },
         -- Enter also accepts
