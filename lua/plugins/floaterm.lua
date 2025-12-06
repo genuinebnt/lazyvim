@@ -63,6 +63,23 @@ return {
         desc = "New terminal tab",
         mode = "n",
       },
+      -- Simple navigation from normal mode
+      {
+        "<leader>tn",
+        function()
+          vim.cmd("FloatermNext")
+        end,
+        desc = "Next terminal",
+        mode = "n",
+      },
+      {
+        "<leader>tp",
+        function()
+          vim.cmd("FloatermPrev")
+        end,
+        desc = "Previous terminal",
+        mode = "n",
+      },
     },
     opts = {
       -- Configuration for floaterm

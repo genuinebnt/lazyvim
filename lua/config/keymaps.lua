@@ -7,7 +7,8 @@
 -- 2. Window resizing (Arrow keys + Ctrl+Arrow)
 -- 3. Windsurf AI completion
 -- 4. Buffer navigation (Tab/Shift+Tab)
--- 5. Format and save (Shift+S)
+-- 5. Format and save (<leader>w)
+-- 6. Window operations (<leader>W + key)
 
 -- Quick escape from insert mode is now handled by better-escape.nvim
 -- Supports jk, kj, and jj mappings with better timing and behavior
@@ -25,11 +26,20 @@ vim.keymap.del("n", "<C-l>")
 vim.keymap.set("n", "<Tab>", ":bnext<CR>", { desc = "Next buffer" })
 vim.keymap.set("n", "<S-Tab>", ":bprev<CR>", { desc = "Previous buffer" })
 
--- Format and save with Shift+S
-vim.keymap.set("n", "<S-s>", function()
+-- Format and save with <leader>w (overriding LazyVim's window menu)
+vim.keymap.set("n", "<leader>w", function()
   vim.lsp.buf.format()
   vim.cmd("write")
 end, { desc = "Format and save file" })
+
+-- Window menu moved to <leader>W (capital W for windows)
+vim.keymap.set("n", "<leader>Ww", "<C-w>w", { desc = "Window: Switch windows" })
+vim.keymap.set("n", "<leader>Wd", "<C-w>c", { desc = "Window: Delete window" })
+vim.keymap.set("n", "<leader>W-", "<C-w>s", { desc = "Window: Split window below" })
+vim.keymap.set("n", "<leader>W|", "<C-w>v", { desc = "Window: Split window right" })
+vim.keymap.set("n", "<leader>W=", "<C-w>=", { desc = "Window: Resize equal" })
+vim.keymap.set("n", "<leader>Wm", "<C-w>_<C-w>|", { desc = "Window: Maximize" })
+vim.keymap.set("n", "<leader>Wo", "<C-w>o", { desc = "Window: Close other windows" })
 
 -- Panel navigation with Shift+HLJK
 -- Move between explorer and editor panels (terminal is now floating)
@@ -228,11 +238,11 @@ end, { desc = "Undo: Refresh undotree", noremap = true })
 
 -- Snacks explorer keybindings
 vim.keymap.set("n", "<leader>e", function()
-  vim.cmd("SnacksExplorer")
+  require("snacks").explorer.open()
 end, { desc = "Explorer: Open snacks explorer", noremap = true })
 
 vim.keymap.set("n", "<leader>E", function()
-  vim.cmd("SnacksPicker")
+  require("snacks").picker.open()
 end, { desc = "Explorer: Open snacks picker", noremap = true })
 
 -- Test snacks icons
