@@ -5,10 +5,9 @@
 -- Custom keymap categories:
 -- 1. Panel navigation (Shift+HJKL)
 -- 2. Window resizing (Arrow keys + Ctrl+Arrow)
--- 3. Windsurf AI completion
--- 4. Buffer navigation (Tab/Shift+Tab)
--- 5. Format and save (<leader>w)
--- 6. Window operations (<leader>W + key)
+-- 3. Buffer navigation (Tab/Shift+Tab)
+-- 4. Format and save (<leader>w)
+-- 5. Window operations (<leader>W + key)
 
 -- Quick escape from insert mode is now handled by better-escape.nvim
 -- Supports jk, kj, and jj mappings with better timing and behavior

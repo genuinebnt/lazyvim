@@ -4,7 +4,6 @@ return {
     "saghen/blink.cmp",
     dependencies = {
       "rafamadriz/friendly-snippets",
-      "Exafunction/windsurf.nvim",
     },
     opts = {
       keymap = {
@@ -32,12 +31,8 @@ return {
       -- Only show the documentation popup when manually triggered
       completion = { documentation = { auto_show = false } },
 
-      -- Sources including Windsurf (Codeium)
       sources = {
-        default = { "lsp", "path", "snippets", "buffer", "codeium" },
-        providers = {
-          codeium = { name = "Codeium", module = "codeium.blink", async = true },
-        },
+        default = { "lsp", "path", "snippets", "buffer" },
       },
       
       -- Rust fuzzy matcher for better performance
