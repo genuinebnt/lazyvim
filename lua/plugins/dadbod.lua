@@ -43,7 +43,7 @@ return {
   
   {
     "kristijanhusak/vim-dadbod-completion",
-    dependencies = { "tpope/vim-dadbod", "hrsh7th/nvim-cmp" },
+    dependencies = { "tpope/vim-dadbod" },
     ft = { "sql", "mysql", "plsql" },
     config = function()
       -- Completion only works when manually connected to a database
