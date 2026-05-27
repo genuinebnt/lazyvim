@@ -1,12 +1,14 @@
 return {
-  -- Floating terminal plugin
+  -- Floating terminal (vim-floaterm). Separate from LazyVim/Snacks bottom terminal (<leader>ft).
+  -- Snacks: bottom split terminal — <leader>ft, <leader>fT (cwd), <c-/>
+  -- Floaterm: centered float — <leader>fz toggle, <leader>fN new floaterm
   {
     "voldikss/vim-floaterm",
     cmd = { "FloatermNew", "FloatermToggle", "FloatermHide", "FloatermKill" },
     keys = {
-      -- Toggle floating terminal
+      -- Toggle floating terminal (do not use <leader>ft — that is Snacks terminal)
       {
-        "<leader>ft",
+        "<leader>fz",
         function()
           vim.cmd("FloatermToggle")
           -- Enter insert mode when terminal becomes visible
@@ -14,53 +16,18 @@ return {
             vim.cmd("startinsert")
           end
         end,
-        desc = "Toggle floating terminal",
+        desc = "Floaterm (float)",
         mode = "n",
       },
-      -- Navigate between terminal tabs (when in terminal mode)
+      -- Terminal-mode keys moved to FileType=floaterm (see config) — global `t` maps broke Snacks terminals (e.g. <S-q> → FloatermKill error).
+      -- New floaterm instance (do not use <leader>fn — LazyVim uses that for :enew)
       {
-        "<Tab>",
-        function()
-          vim.cmd("FloatermNext")
-        end,
-        desc = "Next terminal tab",
-        mode = "t", -- terminal mode only
-      },
-      {
-        "<S-Tab>",
-        function()
-          vim.cmd("FloatermPrev")
-        end,
-        desc = "Previous terminal tab",
-        mode = "t", -- terminal mode only
-      },
-      -- Hide floating terminal (removed q keybinding, only Esc available)
-      -- Exit/kill floating terminal
-      {
-        "<S-q>",
-        function()
-          vim.cmd("FloatermKill")
-        end,
-        desc = "Exit floating terminal",
-        mode = "t", -- terminal mode
-      },
-      -- Escape from terminal (hide terminal)
-      {
-        "<Esc>",
-        function()
-          vim.cmd("FloatermHide")
-        end,
-        desc = "Hide floating terminal",
-        mode = "t",
-      },
-      -- Create new terminal tab
-      {
-        "<leader>fn",
+        "<leader>fN",
         function()
           vim.cmd("FloatermNew")
           vim.cmd("startinsert")
         end,
-        desc = "New terminal tab",
+        desc = "Floaterm new (float)",
         mode = "n",
       },
       -- Simple navigation from normal mode
@@ -104,6 +71,26 @@ return {
       for key, value in pairs(opts.floaterm) do
         vim.g["floaterm_" .. key] = value
       end
+
+      vim.api.nvim_create_autocmd("FileType", {
+        pattern = "floaterm",
+        group = vim.api.nvim_create_augroup("floaterm_terminal_keys", { clear = true }),
+        callback = function(event)
+          local buf = event.buf
+          vim.keymap.set("t", "<Tab>", function()
+            vim.cmd("FloatermNext")
+          end, { buffer = buf, desc = "Floaterm next" })
+          vim.keymap.set("t", "<S-Tab>", function()
+            vim.cmd("FloatermPrev")
+          end, { buffer = buf, desc = "Floaterm prev" })
+          vim.keymap.set("t", "<S-q>", function()
+            vim.cmd("FloatermKill")
+          end, { buffer = buf, desc = "Floaterm kill" })
+          vim.keymap.set("t", "<Esc>", function()
+            vim.cmd("FloatermHide")
+          end, { buffer = buf, desc = "Floaterm hide" })
+        end,
+      })
 
       -- Auto enter insert mode when terminal is opened
       vim.api.nvim_create_autocmd("TermOpen", {

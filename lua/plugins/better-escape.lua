@@ -1,7 +1,8 @@
 return {
   {
     "max397574/better-escape.nvim",
-    event = "InsertEnter",
+    -- TermEnter: jk/kj in shells need this; InsertEnter alone defers plugin until first insert
+    event = { "InsertEnter", "TermEnter" },
     config = function()
       require("better_escape").setup({
         timeout = vim.o.timeoutlen, -- Use vim's timeout setting
@@ -24,7 +25,10 @@ return {
           },
           t = {
             j = {
-              k = "<C-\\><C-n>",
+              k = "<C-\\><C-n>", -- jk → terminal-normal
+            },
+            k = {
+              j = "<C-\\><C-n>", -- kj → terminal-normal
             },
           },
           v = {

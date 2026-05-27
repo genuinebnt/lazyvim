@@ -7,6 +7,16 @@ return {
       "nvim-tree/nvim-web-devicons",
     },
     opts = {
+      -- Interactive terminal: horizontal split at bottom (also set win opts so it wins over internal float default when possible).
+      terminal = {
+        win = {
+          position = "bottom",
+          height = 0.35,
+          border = "rounded",
+        },
+        -- Terminal `t`-mode keys are set in lua/config/keymaps.lua (FileType snacks_terminal)
+        -- so hide / arrows / Ctrl-hjkl always work; merged `terminal.keys` here is unreliable for `t`.
+      },
       -- Configure snacks components
       bigfile = { enabled = true },
       dashboard = { enabled = true },
